@@ -108,10 +108,14 @@ class BertLayer(nn.Module):
     dropout: the dropout to be applied 
     ln_layer: the layer norm to be applied
     """
+    output = dense_layer(output)
+    output = dropout(output)
+    output += input
+    output = ln_layer(output)
     # Hint: Remember that BERT applies dropout to the transformed output of each sub-layer,
     # before it is added to the sub-layer input and normalized with a layer norm.
     ### TODO
-    raise NotImplementedError
+    return output
 
 
   def forward(self, hidden_states, attention_mask):
@@ -125,7 +129,15 @@ class BertLayer(nn.Module):
     4. An add-norm operation that takes the input and output of the feed forward layer.
     """
     ### TODO
-    raise NotImplementedError
+    attention_output = self.self_attention(hidden_states, attention_mask)
+    hidden_states = self.add_norm(hidden_states, attention_output, self.attention_dense, self.attention_dropout,self.attention_layer_norm)
+
+    intermediate_output = self.interm_dense(hidden_states)
+    intermediate_output = self.interm_af(intermediate_output) # Gelu
+
+    new_hidden_states = self.add_norm(hidden_states, intermediate_output, self.out_dense, self.out_dropout, self.out_layer_norm)
+
+    return new_hidden_states
 
 
 
@@ -168,14 +180,13 @@ class BertModel(BertPreTrainedModel):
     # Get word embedding from self.word_embedding into input_embeds.
     inputs_embeds = None
     ### TODO
-    raise NotImplementedError
+    inputs_embeds = self.word_embedding(input_ids) # (bs, seq_len, hidden_size)
 
 
     # Use pos_ids to get position embedding from self.pos_embedding into pos_embeds.
     pos_ids = self.position_ids[:, :seq_length]
-    pos_embeds = None
+    pos_embeds = self.pos_embedding(pos_ids)
     ### TODO
-    raise NotImplementedError
 
 
     # Get token type ids. Since we are not considering token type, this embedding is
@@ -185,7 +196,10 @@ class BertModel(BertPreTrainedModel):
 
     # Add three embeddings together; then apply embed_layer_norm and dropout and return.
     ### TODO
-    raise NotImplementedError
+    embeds = inputs_embeds + pos_embeds + tk_type_embeds
+    embeds = self.embed_layer_norm(embeds)
+    embeds = self.embed_dropout(embeds)
+    return embeds
 
 
   def encode(self, hidden_states, attention_mask):

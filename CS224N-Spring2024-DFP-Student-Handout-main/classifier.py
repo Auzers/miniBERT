@@ -11,6 +11,7 @@ from tokenizer import BertTokenizer
 from bert import BertModel
 from optimizer import AdamW
 from tqdm import tqdm
+import torch.nn as nn
 
 
 TQDM_DISABLE=False
@@ -49,7 +50,9 @@ class BertSentimentClassifier(torch.nn.Module):
 
         # Create any instance variables you need to classify the sentiment of BERT embeddings.
         ### TODO
-        raise NotImplementedError
+        self.dropout = nn.Dropout(config.hidden_dropout_prob)
+        self.classifier = nn.Linear(config.hidden_size, self.num_labels)
+
 
 
     def forward(self, input_ids, attention_mask):
@@ -58,7 +61,11 @@ class BertSentimentClassifier(torch.nn.Module):
         # HINT: You should consider what is an appropriate return value given that
         # the training loop currently uses F.cross_entropy as the loss function.
         ### TODO
-        raise NotImplementedError
+        output = self.bert(input_ids, attention_mask)
+        cls_hidden = output['pooler_output']
+        cls_hidden = self.dropout(cls_hidden)
+        logits = self.classifier(cls_hidden)
+        return logits
 
 
 
