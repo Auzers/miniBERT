@@ -162,6 +162,9 @@ def train_multitask(args):
     sst_train_data = SentenceClassificationDataset(sst_train_data, args)
     sst_dev_data = SentenceClassificationDataset(sst_dev_data, args)
 
+    # 筛出 Quora 的正例对（is_duplicate == 1）用于对比学习
+    contrastive_train_data = [x for x in para_train_data if x[2] == 1]
+
     para_train_data = SentencePairDataset(para_train_data, args)
     para_dev_data = SentencePairDataset(para_dev_data, args)
 
@@ -182,6 +185,10 @@ def train_multitask(args):
                                       collate_fn=sts_train_data.collate_fn)
     sts_dev_dataloader = DataLoader(sts_dev_data, shuffle=False, batch_size=args.batch_size,
                                     collate_fn=sts_dev_data.collate_fn)
+
+    contrastive_train_dataset = SentencePairDataset(contrastive_train_data, args)
+    contrastive_train_dataloader = DataLoader(contrastive_train_dataset, shuffle=True, batch_size=args.batch_size,
+                                              collate_fn=contrastive_train_dataset.collate_fn)
 
     # Init model.
     config = {'hidden_dropout_prob': args.hidden_dropout_prob,
@@ -206,9 +213,10 @@ def train_multitask(args):
         num_batches = 0
         for batch in tqdm(zip(sst_train_dataloader,
                               cycle(para_train_dataloader),
-                              cycle(sts_train_dataloader)),
+                              cycle(sts_train_dataloader),
+                              cycle(contrastive_train_dataloader)),
                           desc=f'train-{epoch}', total=len(sst_train_dataloader), disable=TQDM_DISABLE):
-            sst_batch, para_batch, sts_batch = batch
+            sst_batch, para_batch, sts_batch, contrastive_batch = batch
 
             # Train on sentiment.
             b_ids, b_mask, b_labels = (sst_batch['token_ids'],
@@ -251,8 +259,20 @@ def train_multitask(args):
             sts_logits = model.predict_similarity(b_ids1, b_mask1, b_ids2, b_mask2)
             sts_loss = F.mse_loss(sts_logits.squeeze(-1), b_labels.float(), reduction='sum') / args.batch_size
 
+            # Train on contrastive (Multiple Negatives Ranking Loss).
+            c_ids1 = contrastive_batch['token_ids_1'].to(device)
+            c_mask1 = contrastive_batch['attention_mask_1'].to(device)
+            c_ids2 = contrastive_batch['token_ids_2'].to(device)
+            c_mask2 = contrastive_batch['attention_mask_2'].to(device)
+
+            c_emb1 = F.normalize(model.forward(c_ids1, c_mask1), dim=-1)   # [K, 768]
+            c_emb2 = F.normalize(model.forward(c_ids2, c_mask2), dim=-1)   # [K, 768]
+            sim = c_emb1 @ c_emb2.T                                       # [K, K]，sim[i][j] = cos(a_i, b_j)
+            c_labels = torch.arange(sim.size(0), device=device)
+            contrastive_loss = F.cross_entropy(sim * 20.0, c_labels)
+
             optimizer.zero_grad()
-            loss = sst_loss + para_loss + sts_loss
+            loss = sst_loss + para_loss + sts_loss + 0.5 * contrastive_loss
             loss.backward()
             optimizer.step()
 
