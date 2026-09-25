@@ -77,7 +77,7 @@ class MultitaskBERT(nn.Module):
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.sentiment_head = nn.Linear(config.hidden_size, len(config.num_labels))
         self.paraphrase_head = nn.Linear(config.hidden_size * 2, 1)
-        self.similarity_head = nn.Linear(config.hidden_size * 2, 1)
+        self.similarity_head = nn.Linear(config.hidden_size * 4, 1)
 
 
     def forward(self, input_ids, attention_mask):
@@ -123,7 +123,7 @@ class MultitaskBERT(nn.Module):
         ### TODO
         emb1 = self.dropout(self.forward(input_ids_1, attention_mask_1))
         emb2 = self.dropout(self.forward(input_ids_2, attention_mask_2))
-        combined = torch.cat([emb1, emb2], dim=-1)
+        combined = torch.cat([emb1, emb2, torch.abs(emb1 - emb2), emb1 * emb2], dim=-1)
         return self.similarity_head(combined)
 
         
