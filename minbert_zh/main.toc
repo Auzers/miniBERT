@@ -1,0 +1,52 @@
+\contentsline {section}{\numberline {1}概述（Overview）}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Bidirectional Encoder Representations from Transformers：BERT}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}情感分析（Sentiment Analysis）}{3}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}释义检测（Paraphrase Detection）}{3}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}语义文本相似度（Semantic Textual Similarity, STS）}{4}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}本项目（This Project）}{5}{subsection.1.5}%
+\contentsline {section}{\numberline {2}开始（Getting Started）}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}代码概览（Code overview）}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}环境配置（Setup）}{6}{subsection.2.2}%
+\contentsline {section}{\numberline {3}实现 minBERT（Implementing minBERT）}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}BERT 的细节（Details of BERT）}{7}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}分词（\texttt {tokenizer.py}）}{7}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}嵌入层（\texttt {bert.BertModel.embed}）}{7}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}BERT Transformer 层（\texttt {bert.BertLayer}）}{8}{subsubsection.3.1.3}%
+\contentsline {subsubsection}{\numberline {3.1.4}BERT 输出（\texttt {bert.BertModel.forward}）}{9}{subsubsection.3.1.4}%
+\contentsline {subsubsection}{\numberline {3.1.5}训练 BERT（Training BERT）}{10}{subsubsection.3.1.5}%
+\contentsline {subsection}{\numberline {3.2}待实现代码：多头自注意力与 Transformer 层}{10}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}BERT 多头自注意力：\texttt {bert.BertSelfAttention.attention}}{10}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}BERT Transformer 层：\texttt {bert.BertLayer} 与 \texttt {bert.BertModel}}{11}{subsubsection.3.2.2}%
+\contentsline {section}{\numberline {4}用 BERT 做情感分析（Sentiment Analysis with the BERT）}{11}{section.4}%
+\contentsline {subsection}{\numberline {4.1}数据集（Datasets）}{11}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}斯坦福情感树库（Stanford Sentiment Treebank, SST）数据集}{11}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}CFIMDB 数据集}{11}{subsubsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.2}待实现代码：基于 BERT 嵌入的情感分类}{12}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Adam 优化器（Adam Optimizer）}{12}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Adam 优化器概述}{12}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}待实现代码：\texttt {optimizer.step}}{12}{subsubsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.4}训练 minBERT 做情感分类}{12}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}minBERT 的提交说明}{13}{subsection.4.5}%
+\contentsline {section}{\numberline {5}针对额外下游任务的扩展与改进}{14}{section.5}%
+\contentsline {subsection}{\numberline {5.1}数据集概览（Dataset Overview）}{14}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Quora 数据集}{14}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}SemEval STS 基准数据集}{15}{subsubsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.2}代码概览（Code Overview）}{15}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}可能的扩展（Possible Extensions）}{16}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}额外预训练（Additional Pretraining）}{16}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}多重负样本排序损失学习（Multiple Negatives Ranking Loss Learning）}{16}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}余弦相似度微调（Cosine-Similarity Fine-Tuning）}{17}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}带正则化优化的微调（Fine-Tuning with Regularized Optimization）}{17}{subsubsection.5.3.4}%
+\contentsline {subsubsection}{\numberline {5.3.5}多任务微调（Multitask Fine-Tuning）}{18}{subsubsection.5.3.5}%
+\contentsline {subsubsection}{\numberline {5.3.6}对比学习（Contrastive Learning）}{18}{subsubsection.5.3.6}%
+\contentsline {subsubsection}{\numberline {5.3.7}参数高效微调方法（Parameter Efficient Finetuning Methods）}{19}{subsubsection.5.3.7}%
+\contentsline {subsubsection}{\numberline {5.3.8}额外数据集（Additional Datasets）}{19}{subsubsection.5.3.8}%
+\contentsline {subsubsection}{\numberline {5.3.9}额外的输入特征（Additional input features）}{19}{subsubsection.5.3.9}%
+\contentsline {subsubsection}{\numberline {5.3.10}其他改进（Other improvements）}{19}{subsubsection.5.3.10}%
+\contentsline {subsubsection}{\numberline {5.3.11}其他方法（Other Approaches）}{20}{subsubsection.5.3.11}%
+\contentsline {subsection}{\numberline {5.4}提交说明}{20}{subsection.5.4}%
+\contentsline {section}{\numberline {6}提交到排行榜（Submitting to the Leaderboard）}{20}{section.6}%
+\contentsline {subsection}{\numberline {6.1}概述（Overview）}{20}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}提交步骤（Submission Steps）}{21}{subsection.6.2}%
+\contentsline {section}{\numberline {7}评分标准（Grading Criteria）}{21}{section.7}%
+\contentsline {section}{\numberline {8}荣誉准则（Honor Code）}{22}{section.8}%
