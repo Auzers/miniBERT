@@ -201,7 +201,7 @@ class BertConfig(PretrainedConfig):
     gradient_checkpointing=False,
     position_embedding_type="absolute",
     use_cache=True,
-    **kwargs
+    **kwargs # 子类不用但是父类要用的参数
   ):
     super().__init__(pad_token_id=pad_token_id, **kwargs)
 
